@@ -137,6 +137,13 @@ class TestDockerGenerators:
         assert "postgres:" in compose
         assert "myapp-postgres" in compose
 
+    def test_docker_compose_separates_postgres_host_and_container_ports(
+        self: TestDockerGenerators,
+    ) -> None:
+        compose = get_docker_compose("myapp")
+        assert '"${POSTGRES_PORT:-5432}:5432"' in compose
+        assert "- POSTGRES_PORT=5432" in compose
+
     def test_docker_compose_has_api_service(self: TestDockerGenerators) -> None:
         compose = get_docker_compose("myapp")
         assert "myapp:" in compose
